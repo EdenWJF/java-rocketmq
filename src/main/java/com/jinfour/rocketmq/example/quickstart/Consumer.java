@@ -33,38 +33,11 @@ public class Consumer {
 
     public static void main(String[] args) throws InterruptedException, MQClientException {
 
-        /*
-         * Instantiate with specified consumer group name.
-         */
         DefaultMQPushConsumer consumer = new DefaultMQPushConsumer("CID_CONSUMER");
         consumer.setNamesrvAddr("localhost:9876");
-        /*
-         * Specify name server addresses.
-         * <p/>
-         *
-         * Alternatively, you may specify name server addresses via exporting environmental variable: NAMESRV_ADDR
-         * <pre>
-         * {@code
-         * consumer.setNamesrvAddr("name-server1-ip:9876;name-server2-ip:9876");
-         * }
-         * </pre>
-         */
-
-        /*
-         * Specify where to start in case the specified consumer group is a brand new one.
-         */
         consumer.setConsumeFromWhere(ConsumeFromWhere.CONSUME_FROM_FIRST_OFFSET);
-
-        /*
-         * Subscribe one more more topics to consume.
-         */
-        consumer.subscribe("PID_TEST", "*");
-
-        /*
-         *  Register callback to execute on arrival of messages fetched from brokers.
-         */
+        consumer.subscribe("PID_TTTTT", "*");
         consumer.registerMessageListener(new MessageListenerConcurrently() {
-
             @Override
             public ConsumeConcurrentlyStatus consumeMessage(List<MessageExt> msgs,
                 ConsumeConcurrentlyContext context) {
@@ -72,12 +45,7 @@ public class Consumer {
                 return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
             }
         });
-
-        /*
-         *  Launch the consumer instance.
-         */
         consumer.start();
-
         System.out.printf("Consumer Started.%n");
     }
 }

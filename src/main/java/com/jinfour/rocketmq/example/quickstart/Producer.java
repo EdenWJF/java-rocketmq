@@ -18,64 +18,54 @@ package com.jinfour.rocketmq.example.quickstart;
 
 import org.apache.rocketmq.client.exception.MQClientException;
 import org.apache.rocketmq.client.producer.DefaultMQProducer;
+import org.apache.rocketmq.client.producer.SendCallback;
 import org.apache.rocketmq.client.producer.SendResult;
 import org.apache.rocketmq.common.message.Message;
 import org.apache.rocketmq.remoting.common.RemotingHelper;
+
+import java.util.concurrent.TimeUnit;
 
 /**
  * This class demonstrates how to send messages to brokers using provided {@link DefaultMQProducer}.
  */
 public class Producer {
-    public static void main(String[] args) throws MQClientException, InterruptedException {
 
-        /*
-         * Instantiate with a producer group name.
-         */
-        DefaultMQProducer producer = new DefaultMQProducer("PID_TEST");
-        producer.setNamesrvAddr("127.0.0.1:9876");
-        /*
-         * Specify name server addresses.
-         * <p/>
-         *
-         * Alternatively, you may specify name server addresses via exporting environmental variable: NAMESRV_ADDR
-         * <pre>
-         * {@code
-         * producer.setNamesrvAddr("name-server1-ip:9876;name-server2-ip:9876");
-         * }
-         * </pre>
-         */
+    public static void main(String[] args) throws MQClientException {
+        DefaultMQProducer producer = new DefaultMQProducer("PID_order_producers");
 
-        /*
-         * Launch the instance.
-         */
+        producer.setNamesrvAddr("localhost:9876");
+
         producer.start();
 
-        for (int i = 0; i < 1000; i++) {
+        for (int i = 0; i < 10; i++) {
             try {
+                Message message = new Message();
+                message.setTopic("PID_FASD");
+                message.setTags("TagD");
+                message.setBody(("PID_RRRRR" + i).getBytes());
+                producer.send(message, new SendCallback() {
+                    @Override
+                    public void onSuccess(SendResult sendResult) {
+                        System.out.println("提交成功");
+                    }
 
-                /*
-                 * Create a message instance, specifying topic, tag and message body.
-                 */
-                Message msg = new Message("PID_TEST" /* Topic */,
-                    "TagA" /* Tag */,
-                    ("Hello RocketMQ " + i).getBytes(RemotingHelper.DEFAULT_CHARSET) /* Message body */
-                );
+                    @Override
+                    public void onException(Throwable e) {
+                        System.out.println("提交失败， e: "+ e.getMessage());
+                    }
+                });
 
-                /*
-                 * Call send message to deliver message to one of brokers.
-                 */
-                SendResult sendResult = producer.send(msg);
-
-                System.out.printf("%s%n", sendResult);
-            } catch (Exception e) {
+            }catch (Exception e) {
                 e.printStackTrace();
-                Thread.sleep(1000);
             }
-        }
 
-        /*
-         * Shut down once the producer instance is not longer in use.
-         */
+        }
+        try {
+            TimeUnit.SECONDS.sleep(6);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         producer.shutdown();
+
     }
 }

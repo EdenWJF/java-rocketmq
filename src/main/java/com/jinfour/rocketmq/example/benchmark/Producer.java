@@ -28,7 +28,6 @@ import org.apache.rocketmq.common.message.Message;
 import org.apache.rocketmq.logging.InternalLogger;
 import org.apache.rocketmq.remoting.common.RemotingHelper;
 import org.apache.rocketmq.remoting.exception.RemotingException;
-import org.apache.rocketmq.srvutil.ServerUtil;
 
 import java.io.UnsupportedEncodingException;
 import java.util.LinkedList;
@@ -157,8 +156,9 @@ public class Producer {
                             long prevMaxRT = statsBenchmark.getSendMessageMaxRT().get();
                             while (currentRT > prevMaxRT) {
                                 boolean updated = statsBenchmark.getSendMessageMaxRT().compareAndSet(prevMaxRT, currentRT);
-                                if (updated)
+                                if (updated) {
                                     break;
+                                }
 
                                 prevMaxRT = statsBenchmark.getSendMessageMaxRT().get();
                             }

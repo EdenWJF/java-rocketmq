@@ -29,20 +29,23 @@ import org.apache.rocketmq.remoting.exception.RemotingException;
 
 import java.io.UnsupportedEncodingException;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 public class Producer {
     public static void main(String[] args) throws UnsupportedEncodingException {
+        MQProducer producer = new DefaultMQProducer("order_producers");
         try {
-            MQProducer producer = new DefaultMQProducer("please_rename_unique_group_name");
             producer.start();
 
             String[] tags = new String[] {"TagA", "TagB", "TagC", "TagD", "TagE"};
             for (int i = 0; i < 100; i++) {
                 int orderId = i % 10;
-                Message msg =
-                    new Message("TopicTestjjj", tags[i % tags.length], "KEY" + i,
-                        ("Hello RocketMQ " + i).getBytes(RemotingHelper.DEFAULT_CHARSET));
-                SendResult sendResult = producer.send(msg, new MessageQueueSelector() {
+                Message msg =new Message();
+                msg.setTopic("TopicTestjjj");
+                msg.setTags(tags[i % tags.length]);
+                msg.setKeys("KEY" + i);
+                msg.setBody(("Hello RocketMQ " + i).getBytes(RemotingHelper.DEFAULT_CHARSET));
+                producer.send(msg, new MessageQueueSelector() {
                     @Override
                     public MessageQueue select(List<MessageQueue> mqs, Message msg, Object arg) {
                         Integer id = (Integer) arg;
@@ -51,12 +54,18 @@ public class Producer {
                     }
                 }, orderId);
 
-                System.out.printf("%s%n", sendResult);
+                //System.out.printf("%s%n", sendResult);
+            }
+            try {
+                TimeUnit.SECONDS.sleep(6);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
             }
 
-            producer.shutdown();
         } catch (MQClientException | RemotingException | MQBrokerException | InterruptedException e) {
             e.printStackTrace();
+        }finally {
+            producer.shutdown();
         }
     }
 }
