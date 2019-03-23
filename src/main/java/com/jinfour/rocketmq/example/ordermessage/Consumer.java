@@ -31,7 +31,7 @@ public class Consumer {
 
     public static void main(String[] args) throws MQClientException {
         DefaultMQPushConsumer consumer = new DefaultMQPushConsumer("please_rename_unique_group_name_3");
-
+        consumer.setNamesrvAddr("localhost:9876");
         consumer.setConsumeFromWhere(ConsumeFromWhere.CONSUME_FROM_FIRST_OFFSET);
 
         consumer.subscribe("TopicTest", "TagA || TagC || TagD");
