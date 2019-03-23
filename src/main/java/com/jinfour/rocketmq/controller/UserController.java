@@ -1,8 +1,11 @@
 package com.jinfour.rocketmq.controller;
 
 import com.alibaba.fastjson.JSON;
+import com.distributedlock.manager.ILockManager;
+import com.distributedlock.properties.LockProperties;
 import com.jinfour.rocketmq.mapper.VvSignUserMapper;
 import com.jinfour.rocketmq.model.VvUser;
+import com.jinfour.rocketmq.service.UserServcie;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Controller;
@@ -22,16 +25,15 @@ public class UserController {
     @Autowired
     VvSignUserMapper user;
 
+
     @Autowired
-    RedisTemplate redisTemplate;
+    private UserServcie userServcie;
 
     @ResponseBody
     @GetMapping("/payment")
     public Object pay() {
-        HashMap map = new HashMap();
-        map.put("haha", "fsfdsdf");
-        redisTemplate.opsForValue().set("haha", 1);
-        VvUser user = this.user.getUser(1L);
+        //redisTemplate.opsForValue().set("haha", 1);
+        VvUser user = userServcie.updateUser(1L);
         return user;
     }
 }

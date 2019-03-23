@@ -25,5 +25,26 @@
         select <include refid="allResult" /> from vv_user where id = #{id}
     </select>
 
+    <update id="updateUser">
+
+        update vv_user
+        set
+        <trim suffixOverrides=",">
+            <if test="name != null">
+                name=#{name},
+            </if>
+            <if test="age != null">
+                age=#{age},
+            </if>
+            <if test="sex != null">
+                sex=#{sex},
+            </if>
+            <if test="salary != null">
+                salary=#{salary},
+            </if>
+        </trim>
+        where id=#{id}
+    </update>
+
 
 </mapper>
