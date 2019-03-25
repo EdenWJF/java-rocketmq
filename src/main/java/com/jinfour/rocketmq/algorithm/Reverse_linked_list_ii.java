@@ -1,11 +1,6 @@
 package com.jinfour.rocketmq.algorithm;
 
 public class Reverse_linked_list_ii {
-    private static class ListNode {
-        int val;
-        ListNode next;
-        ListNode(int x) { val = x; }
-    }
 
     public static ListNode reverseList(ListNode head, int m, int n) {
         ListNode root = head;
