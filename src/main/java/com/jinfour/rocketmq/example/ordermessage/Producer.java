@@ -29,19 +29,21 @@ import org.apache.rocketmq.remoting.exception.RemotingException;
 
 import java.io.UnsupportedEncodingException;
 import java.util.List;
+import java.util.PriorityQueue;
 import java.util.concurrent.TimeUnit;
 
 public class Producer {
     public static void main(String[] args) throws UnsupportedEncodingException {
         MQProducer producer = new DefaultMQProducer("order_producers");
         try {
+            ((DefaultMQProducer) producer).setNamesrvAddr("localhost:9876");
             producer.start();
 
             String[] tags = new String[] {"TagA", "TagB", "TagC", "TagD", "TagE"};
             for (int i = 0; i < 100; i++) {
                 int orderId = i % 10;
                 Message msg =new Message();
-                msg.setTopic("TopicTestjjj");
+                msg.setTopic("OrderMsg");
                 msg.setTags(tags[i % tags.length]);
                 msg.setKeys("KEY" + i);
                 msg.setBody(("Hello RocketMQ " + i).getBytes(RemotingHelper.DEFAULT_CHARSET));
@@ -55,11 +57,6 @@ public class Producer {
                 }, orderId);
 
                 //System.out.printf("%s%n", sendResult);
-            }
-            try {
-                TimeUnit.SECONDS.sleep(6);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
             }
 
         } catch (MQClientException | RemotingException | MQBrokerException | InterruptedException e) {
