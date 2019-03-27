@@ -1,25 +1,29 @@
-package com.jinfour.rocketmq.algorithm;
+package com.jinfour.rocketmq.algorithm.arrandlist;
 
 public class Reverse_linked_list_ii {
 
     public static ListNode reverseList(ListNode head, int m, int n) {
-        ListNode root = head;
+        ListNode tmp = new ListNode(0);
+
+        tmp.next = head;
+        ListNode root = tmp;
         //指向被反转部分的前一个节点
-        for (int i = 0; i < m - 2; i++) {
+        for (int i = 0; i < m - 1; i++) {
             root = root.next;
         }
         ListNode pre = root.next;
         ListNode then = pre.next;
-        while(n-m > 0) {
 
+        while(n-m > 0) {
+            //将root节点指向pre的下一个
             pre.next = then.next;
             then.next = root.next;//******
             root.next = then;//******顺序不能倒
             then = pre.next;
             m++;
-
         }
-        return head;
+
+        return tmp.next;
     }
 
     public static void main(String[] args){

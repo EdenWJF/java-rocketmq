@@ -1,4 +1,4 @@
-package com.jinfour.rocketmq.algorithm;
+package com.jinfour.rocketmq.algorithm.arrandlist;
 
 public class Reverse_linked_list {
 

@@ -1,4 +1,4 @@
-package com.jinfour.rocketmq.algorithm;
+package com.jinfour.rocketmq.algorithm.arrandlist;
 
 import java.util.HashSet;
 
