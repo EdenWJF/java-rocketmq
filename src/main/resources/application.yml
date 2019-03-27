@@ -30,3 +30,10 @@ spring:
 mybatis:
   mapper-locations: classpath:com/jinfour/rocketmq/mapping/**/*.xml  #注意：一定要对应mapper映射xml文件的所在路径
   type-aliases-package: com.jinfour.rocketmq.**  # 注意：对应实体类的路径
+
+redisson:
+  address: redis://127.0.0.1:6379
+  timeout: 3000
+  database: 3
+  connectionPoolSize: 6
+  connection-minimum-idle-size: 5
